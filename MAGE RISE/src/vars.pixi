@@ -1,0 +1,53 @@
+//LOGO
+logo="Mage's"
+logo2="rise"
+
+//MAP
+castlemap=new(40,10)
+clean(castlemap)
+map=new(24,64)
+map2=new(24,64)
+clean(map)
+clean(map2)
+//MAP BORDERS
+for(i=0;i<24;i+1){
+for(j=0;j<64;j+1){
+	map[i,63]=1
+	map[0,j]=1
+	map[23,j]=1
+}}
+
+//PLAYER ATTR
+score=0
+px=0 py=0
+pvx=0 g=0
+face=0
+anp=0 anpd=0
+efan=0 efan2=0
+hp=0
+time=0
+
+score2=0
+px2=0 py2=0
+pvx2=0 g2=0
+face2=0
+anp2=0 anpd2=0
+efan12=0 efan22=0
+bon=0
+bonx=0 bony=0
+hp2=0
+time2=0
+
+
+//GAMERULES
+input_type=1
+game_state=0
+
+//INPUT VARS
+touch = new(3,2,INT)
+clean(touch)
+s =new(3,2,INT)
+clean(s)
+
+//CHEATS
+cht_fly=0

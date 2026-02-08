@@ -1,0 +1,102 @@
+fn input(){
+while (get_event()){
+type = EVT[ EVT_TYPE ]
+if EVT[ EVT_KEY ] == KEY_MOUSE_LEFT {
+	x = EVT[ EVT_X ]
+	y = EVT[ EVT_Y ]
+	tnum = 0
+	if type == EVT_MOUSEBUTTONDOWN {
+	input_type=1
+	    touch[ 0, tnum ] = x
+	    touch[ 1, tnum ] = y
+	    touch[ 2, tnum ] = 1
+	    s[0,tnum]=x
+        s[1,tnum]=y
+if (x<0) {s[2,tnum]=1} else {s[2,tnum]=0}
+}
+	if type == EVT_MOUSEMOVE {
+	    touch[ 0, tnum ] = x
+	    touch[ 1, tnum ] = y
+	}
+	if type == EVT_MOUSEBUTTONUP {
+	    touch[ 0, tnum ] = x
+	    touch[ 1, tnum ] = y
+	    touch[ 2, tnum ] = 0
+	s[0,tnum]=0
+        s[1,tnum]=0
+	}
+	if type == EVT_TOUCHBEGIN {
+	input_type=1
+	    tnum = EVT[ EVT_SCANCODE ]
+	    touch[ 0, tnum ] = x
+	    touch[ 1, tnum ] = y
+	    touch[ 2, tnum ] = 1
+	    s[0,tnum]=x
+        s[1,tnum]=y
+if (x<0){s[2,tnum]=1} else {s[2,tnum]=0}
+	}
+	if type == EVT_TOUCHMOVE {
+	    tnum = EVT[ EVT_SCANCODE ]
+	    touch[ 0, tnum ] = x
+	    touch[ 1, tnum ] = y
+	}
+	if type == EVT_TOUCHEND {
+	    tnum = EVT[ EVT_SCANCODE ]
+	    touch[ 0, tnum ] = x
+	    touch[ 1, tnum ] = y
+	    touch[ 2, tnum ] = 0
+	s[0,tnum]=0
+        s[1,tnum]=0
+}}
+if EVT[ EVT_TYPE ] == EVT_BUTTONDOWN
+	{
+	if(input_type==1){
+	s[0,0]=-50 s[1,0]=0
+	touch[0,0]=-50
+	touch[1,0]=0
+	if(game_state==2){
+	s[0,1]=50 s[1,1]=0
+	touch[0,1]=50
+	touch[1,1]=0
+	}}
+	input_type=0
+	    key = EVT[ EVT_KEY ]
+	    if (key == KEY_UP) { s[2,0]=1 touch[1,0]=-100 touch[2,0]=1 }
+	    if (key == KEY_DOWN) { s[2,0]=1 touch[1,0]=100 touch[2,0]=1 }
+		if key == KEY_LEFT { s[2,0]=1 touch[0,0]=-100 touch[2,0]=1 }
+	    if key == KEY_RIGHT {s[2,0]=1 touch[0,0]=-1 touch[2,0]=1 }
+		
+	if(game_state==2){
+		if (key == 119) { s[2,1]=1 touch[1,1]=-100 touch[2,1]=1 }
+	    if (key == 115) { s[2,1]=1 touch[1,1]=100 touch[2,1]=1 }
+		if (key == 97) { s[2,1]=1 touch[0,1]=1 touch[2,1]=1 }
+	    if (key == 100) {s[2,1]=1 touch[0,1]=100 touch[2,1]=1 }
+		}
+		if (key == 102){
+			cht_fly=1
+		}
+		if (key == 108 && cht_fly == 1){
+			cht_fly=2
+		}
+		if (key == 121 && cht_fly == 2){
+			cht_fly=3
+		}
+	}
+	if EVT[ EVT_TYPE ] == EVT_BUTTONUP
+	{
+	    key = EVT[ EVT_KEY ]
+	    if key == KEY_UP {touch[1,0]=-5}
+	    if key == KEY_DOWN { touch[1,0]=0 }
+	    if key == KEY_LEFT { touch[0,0]=-50 }
+	    if key == KEY_RIGHT { touch[0,0]=-50 }
+	    
+	if(game_state==2){
+		if key == 119 {touch[1,1]=-5}
+	    if key == 115 { touch[1,1]=0 }
+	    if key == 97 { touch[0,1]=50 }
+	    if key == 100 { touch[0,1]=50 }
+		}
+	}
+    if type == EVT_QUIT { halt }
+}
+}

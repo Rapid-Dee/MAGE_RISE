@@ -1,0 +1,504 @@
+include "config.cfg"
+
+include "src/vars.pixi"
+include "src/functions.pixi"
+include "src/input.pixi"
+
+//SET SCREEN SIZE
+set_pixel_size(WINDOW_XSIZE / 320 + screen_size)
+resize( get_screen(), WINDOW_XSIZE, WINDOW_YSIZE )
+
+//LOAD SPRITES WITH ALPHA
+s1=load("sprites/spr.png")
+s2=load("sprites/spr2.png")
+s22=load("sprites/spr.png")
+cov=load("cover.png")
+set_key_color(s1,#000000)
+set_key_color(s2,#000000)
+set_key_color(s22,#000000)
+
+//RECOLOR P2 FROM RED TO BLUE
+for(i=0;i<64;i+1){
+	for(j=0;j<64;j+1){
+if (s22[i,j]==#d61838){
+	s22[i,j]=get_color(#00aaff)
+	}
+}}
+
+
+//INTRO
+intro()
+
+start:
+
+reset()
+//MENU
+while(game_state==0){menu()}
+//GAME
+while((game_state==1||game_state==2)&&cust==0){
+
+frame(1000/40) clear()
+input()
+
+//CHEATS
+if(cht_fly==3){jump=2}
+//jumping
+if(hp>0){
+if(py<-35)
+{my=my+1 py2=py2+1 py=py+1 efy=efy+1 efy2=efy2+1}
+if(py>35)
+{my=my-1 py2=py2-1 py=py-1 efy=efy-1 efy2=efy2-1}
+if(py>65){hp=0 unb=0 score=score-100}
+if(py<-60){g=0 py=py+1}
+py=py-g/1.8
+if(g>8||g<-8){g=g/1.5}
+px=px+pxv
+pxv=pxv/1.1
+unb=unb+1
+bon=bon+1
+if(pxv<-1||pxv>1){pxv=pxv/1.5}
+}
+if(game_state==2){
+if(hp2>0){
+	if(py2>65){hp2=0 unb2=0 score2=score2-100}
+if(py2<-35)
+{my=my+1 py2=py2+1 py=py+1 efy=efy+1 efy2=efy2+1}
+if(py2>35)
+{my=my-1 py2=py2-1 py=py-1 efy=efy-1 efy2=efy2-1}
+if(py2<-60){g2=0 py2=py2+1}
+py2=py2-g2/1.8
+if(g2>8||g2<-8){g2=g2/1.5}
+px2=px2+pxv2
+pxv2=pxv2/1.1
+unb2=unb2+1
+bon2=bon2+1
+if(pxv2<-1||pxv2>1){pxv2=pxv2/1.5}
+}}
+
+//mapping
+g=g-1/2
+if(game_state==2){
+g2=g2-1/2}
+for(i=0;i<24;i+1)
+{for(j=0;j<64;j+1){
+if (my+j*8<75&&my+j*8>-75){
+if(map[i,j]!=14&&map[i,j]!=6&&map[i,j]!=9&&map[i,j]!=10)
+{pixi(s2,i*8-mx,j*8+my,WHITE,1,1,(map[i,j]%8)*8,map2[i,j]*8,8,8)}
+//
+ if(map[i,j]==10){
+		if(i%2==1){
+			pixi(s2,i*8-mx,j*8+my,WHITE,1,1,8,8,8,8)}
+      else{pixi(s2,i*8-mx,j*8+my,WHITE,-1,1,8-1,8,8,8)}}
+      if(map[i,j]==9){
+		if(i%2==1){
+			pixi(s2,i*8-mx,j*8+my,WHITE,1,1,16,8,8,8)}
+      else{pixi(s2,i*8-mx,j*8+my,WHITE,-1,1,16-1,8,8,8)}}
+//brick
+//down
+if(j*8-2+my>py&&py>j*8+my-8&&px>i*8-8-mx&&px<i*8+8-mx&&map[i,j]>=1&&map[i,j]<5){g=0 py=j*8+my-8 time=0 canef=1 jump=2 pxv=pxv/1.5}
+//up
+if(py<j*8+8+my&&
+py>j*8+12+my-8&&
+px>i*8-8-mx&&
+px<i*8+8-mx&&
+map[i,j]>=1&&map[i,j]<5){g=0 py=py+2}
+//right
+if(py<j*8+7+my&&
+py>j*8+2+my-8&&
+px>i*8-9-mx&&
+px<i*8-mx&&
+map[i,j]>=1&&map[i,j]<5){ px=px-0.25 pxv=-1}
+//left
+if(py<j*8+7+my&&
+py>j*8+2+my-8&&
+px>i*8-mx&&
+px<i*8+9-mx&&
+map[i,j]>=1&&map[i,j]<5){px=px+0.25 pxv=1} 
+//2
+if(game_state==2){
+if(j*8-2+my>py2&&py2>j*8+my-8&&px2>i*8-8-mx&&px2<i*8+8-mx&&map[i,j]>=1&&map[i,j]<5){g2=0 py2=j*8+my-8 time2=0 canef2=1 jump2=2 pxv2=pxv2/1.5}
+if(py2<j*8+8+my&&
+py2>j*8+12+my-8&&
+px2>i*8-8-mx&&
+px2<i*8+8-mx&&
+map[i,j]>=1&&map[i,j]<5){g2=0 py2=py2+2}
+if(py2<j*8+7+my&&
+py2>j*8+2+my-8&&
+px2>i*8-9-mx&&
+px2<i*8-mx&&
+map[i,j]>=1&&map[i,j]<5){ px2=px2-0.25 pxv2=-1}
+if(py2<j*8+7+my&&
+py2>j*8+2+my-8&&
+px2>i*8-mx&&
+px2<i*8+9-mx&&
+map[i,j]>=1&&map[i,j]<5){px2=px2+0.25 pxv2=1} 
+}
+//ladder
+if(j*8-4+my>py&&py>j*8+my-8&&px>i*8-8-mx&&px<i*8+8-mx&&map[i,j]==5&&lay==0&&g<1){g=0 py=j*8+my-8 time=0 jump=2 canef=1 pxv=pxv/1.5}
+if(game_state==2){
+if(j*8-4+my>py2&&py2>j*8+my-8&&px2>i*8-8-mx&&px2<i*8+8-mx&&map[i,j]==5&&lay2==0&&g2<1){g2=0 py2=j*8+my-8 time2=0 jump2=2 canef2=1 pxv2=pxv2/1.5}}
+//LOZA
+if(j*8+8+my>py&&py>j*8+my-8&&px>i*8-8-mx&&px<i*8+8-mx&&map[i,j]==7&&lay==0){g=g/2 py+1 jump=2 time=0 canef=0 pxv=pxv/1.5}
+if(game_state==2){
+if(j*8+8+my>py2&&py2>j*8+my-8&&px2>i*8-8-mx&&px2<i*8+8-mx&&map[i,j]==7&&lay2==0){g2=g2/2 py2+1 jump2=2 time2=0 canef2=0 pxv2=pxv2/1.5}}
+//water
+if(map[i,j]==11&&((game_state==1&&hp>0)||(game_state==2&&(hp>0||hp2>0)))){pixi(s2,i*8-mx,j*8+my,WHITE,1,1,(map[i,j]%8)*8+(t/4)%3*8,map2[i,j]*8,8,8)}
+if(j*8+8+my>py&&py>j*8+my-4&&px>i*8-8-mx&&px<i*8+8-mx&&map[i,j]==11){g=10 if(unb>10){hp=hp-1 unb=0 score=score-100}}
+if(game_state==2){
+if(j*8+8+my>py2&&py2>j*8+my-4&&px2>i*8-8-mx&&px2<i*8+8-mx&&map[i,j]==11){g2=10 if(unb2>10){hp2=hp2-1 unb2=0 score2=score2-100}}}
+//spear trap
+if(j*8+4+my>py&&py>j*8+my-4&&px>i*8-8-mx&&px<i*8+8-mx&&map[i,j]==8){g=10 if(unb>10){hp=hp-1 unb=0 score=score-100}}
+if(game_state==2){
+if(j*8+my>py2&&py2>j*8+my-4&&px2>i*8-8-mx&&px2<i*8+8-mx&&map[i,j]==8){g2=10 if(unb2>10){hp2=hp2-1 unb2=0 score2=score2-100}}}
+//bush
+if(py<j*8+8+my&&
+py>j*8-8+my&&
+px>i*8-4-mx&&
+px<i*8+8-mx&&
+map[i,j]==6){inbush=1} 
+if(py<j*8+8+my&&
+py>j*8-8+my&&
+px>i*8-4-mx&&
+px<i*8+8-mx&&
+map[i,j]!=6){inbush=0}
+if(py2<j*8+8+my&&
+py2>j*8-8+my&&
+px2>i*8-4-mx&&
+px2<i*8+8-mx&&
+map[i,j]==6){inbush2=1} 
+if(py2<j*8+8+my&&
+py2>j*8-8+my&&
+px2>i*8-4-mx&&
+px2<i*8+8-mx&&
+map[i,j]==0){inbush2=0} 
+
+/*line(i*8-mx-8,j*8+my,i*8-mx+8,j*8+my,get_color(i*8,i*j,j*8))
+line(i*8-mx,j*8+my+8,i*8-mx,j*8+my-8,get_color(i*8,i*j,j*8))
+*/
+}
+//chest
+if(mp1[i,j]==#a09800){
+	if(chests[i,j]==0){
+chest(i*8-mx,j*8,my,px,py,px2,py2)
+if(chest(i*8-mx,j*8,my,px,py,px2,py2)==1){bon=0 chests[i,j]=1 score=score+100}
+if(chest(i*8-mx,j*8,my,px,py,px2,py2)==2){bon2=0 chests[i,j]=1 score2=score2+100}}
+if (chests[i,j]!=0){chestopen(i*8-mx,j*8,my)}
+}
+}}
+
+i=0
+stay+1
+while(i<2){
+    if (touch[ 2, i]) {
+    	stay=0
+	x = touch[ 0, i]
+	y = touch[ 1, i]
+	x2 = touch[ 0, i]
+	y2 = touch[ 1, i]
+	sx=s[0,i]
+    sy=s[1,i]
+    sc=s[2,i]
+	if(input_type==1){
+	line(x,y,sx,sy,#666666)}
+	if(game_state==1){if(hp>0){
+		
+	if((sy-y)<-senv&&jump!=0) {lay=1}else{lay=0}
+	if((sy-y)>senv&&jump>0){
+time=time+1
+if (time==1) {if(jump==2){efx=px efy=py efan=0}
+if(jump==1){efx=px efy=py efan2=0}
+jump=jump-1 g=6}}else{time=0}
+
+	if((sx-x)>senv){pxv=pxv-0.75}
+	if((sx-x)<-senv){pxv=pxv+0.75}
+	}}
+	if(game_state==2){
+	if(hp>0&&x<0){
+		
+	if((sy-y)<-senv&&jump!=0&&x<0) {lay=1}else{lay=0}
+	if((sy-y)>senv&&jump>0&&x<0){
+time=time+1
+if (time==1) {if(jump==2){efx=px efy=py efan=0}
+if(jump==1){efx=px efy=py efan2=0}
+jump=jump-1 g=6}}else{time=0}
+
+	if((sx-x)>senv&&x<0){pxv=pxv-0.75}
+	if((sx-x)<-senv&&x<0){pxv=pxv+0.75}
+	}}
+	
+	if(input_type==1){
+	box(x-2,y-2,4,4,#666666)}}
+i+1
+}
+i=0
+
+while(i<2){
+    if (touch[ 2, i]) {
+    	stay=0
+	x = touch[ 0, i]
+	y = touch[ 1, i]
+	x2 = touch[ 0, i]
+	y2 = touch[ 1, i]
+	sx=s[0,i]
+    sy=s[1,i]
+    sc=s[2,i]
+	if(input_type==1){
+	line(x,y,sx,sy,#666666)}
+	
+	//2
+	if(game_state==2){
+	if(hp2>0&&x>0){
+		
+	if((sy-y)<-senv&&jump2!=0&&x>0) {lay2=1}else{lay2=0}
+	if((sy-y)>senv&&jump2>0&&x>0){
+time2+1
+if (time2==1) {if(jump2==2){efx2=px2 efy2=py2 efan12=0}
+if(jump2==1){efx2=px2 efy2=py2 efan22=0}
+jump2=jump2-1 g2=6}}else{time2=0}
+
+	if((sx-x)>senv)&&x>0{pxv2=pxv2-0.75}
+	if((sx-x)<-senv&&x>0){pxv2=pxv2+0.75}
+	}}
+	if(input_type==1){
+	box(x-2,y-2,4,4,#666666)}}
+i+1
+}
+
+//GLOBAL TICK
+t+1
+
+//torch
+for(i=0;i<24;i+1)
+{for(j=0;j<64;j+1){
+if (my+j*8<75&&my+j*8>-75){
+	if(map[i,j]==14){
+		$t=t/6
+		if($t%4>1){
+		if(map[i-1,j]==1){
+			
+			pixi(s2,i*8-mx,j*8+my,WHITE,1,1,6*8+($t%2)*8,8,8,8)}
+      else{pixi(s2,i*8-mx,j*8+my,WHITE,-1,1,6*8-1+($t%2)*8,8,8,8)}
+}else{
+if(map[i-1,j]==1){
+			
+			pixi(s2,i*8-mx,j*8+my,WHITE,1,1,0+($t%2)*8,16,8,8)}
+      else{pixi(s2,i*8-mx,j*8+my,WHITE,-1,1,0-1+($t%2)*8,16,8,8)}}
+}
+      //door
+      if(map[i,j]==62){
+		if(i%2==0){
+			pixi(s2,i*8-mx,j*8+my,WHITE,1,1,6*8,7*8,8,8)}
+      else{pixi(s2,i*8-mx,j*8+my,WHITE,-1,1,6*8-1,7*8,8,8)}}
+     if(map[i,j]==63){
+		if(i%2==0){
+			pixi(s2,i*8-mx,j*8+my,WHITE,1,1,7*8,7*8,8,8)}
+      else{pixi(s2,i*8-mx,j*8+my,WHITE,-1,1,7*8-1,7*8,8,8)}}
+     
+      }
+}}
+
+//jump effect
+//effect aimation
+efan+1
+efan2+1
+efan12+1
+efan22+1
+jump_effect(efan,efan2,efx,efy,canef)
+if(game_state==2){jump_effect(efan12,efan22,efx2,efy2,canef2)}
+
+//facing
+if (pxv<-0.5) {face=-1} if (pxv>0.5){face=0}
+if (pxv2<-0.5) {face2=-1} if (pxv2>0.5){face2=0}
+//animation
+if (t%6==0){anp+1}if (t%12==0){if (hp<1){anpd+1}}
+if (t%6==0){anp2+1}if (t%12==0){if (hp2<1){anpd2+1}}
+draw_player(anp,anpd,face,hp,px,py,pxv,g,s1)
+if(game_state==2){draw_player(anp2,anpd2,face2,hp2,px2,py2,pxv2,g2,s22)}
+
+
+//BUSH
+for(i=0;i<24;i+1){
+for(j=0;j<64;j+1){
+	if (my+j*8<75&&my+j*8>-75){
+		if(map[i,j]==6){pixi(s2,i*8-mx,j*8+my,WHITE,1,1,map[i,j]*8,map2[i,j]*8,8,8)}
+	}
+}}
+
+//ENEMIES
+if(level==1){
+bat(25*8,my,t,px,py,t)
+if(bat(25*8,my,t,px,py)==1){g=10 if(unb>10){hp=hp-1 unb=0 score=score-100}}
+//p2
+if (game_state==2){
+if(bat(25*8,my,t,px2,py2)==1){g2=10 if(unb2>10){hp2=hp2-1 unb2=0 score2=score2-100}}}
+}
+if(level==3){
+	for(i=0;i<272;i+138){
+bat(17*8,my,t+300+i,px,py,t)
+if(bat(17*8,my,t+300+i,px,py)==1){g=10 if(unb>10){hp=hp-1 unb=0 score=score-100}}
+//p2
+if (game_state==2){
+if(bat(17*8,my,t+300+i,px2,py2)==1){g2=10 if(unb2>10){hp2=hp2-1 unb2=0 score2=score2-100}}}
+       
+bat(24*8,my,t+i,px,py,t)
+if(bat(24*8,my,t+i,px,py)==1){g=10 if(unb>10){hp=hp-1 unb=0 score=score-100}}
+//p2
+if (game_state==2){
+if(bat(24*8,my,t+i,px2,py2)==1){g2=10 if(unb2>10){hp2=hp2-1 unb2=0 score2=score2-100}}}
+       
+   
+   bat(30*8,my,t+150+i,px,py,t)
+if(bat(30*8,my,t+150+i,px,py)==1){g=10 if(unb>10){hp=hp-1 unb=0 score=score-100}}
+//p2
+if (game_state==2){
+if(bat(30*8,my,t+150+i,px2,py2)==1){g2=10 if(unb2>10){hp2=hp2-1 unb2=0 score2=score2-100}}}
+       }
+}
+   
+
+//player cursor
+
+if(stay>40||inbush==1){
+	if(hp>0){
+pixi(s1,px,py-9,WHITE,1,1,0,6*8,8,8)}
+}
+if(stay>40||inbush2==1){
+if(hp2>0&&game_state==2){
+pixi(s1,px2,py2-9,WHITE,1,1,8,6*8,8,8)}
+}
+if(hp>0){
+if (unb<2){ox=px oy=py}
+if(unb>1){oy=oy+0.5 }
+if (unb<10){
+pixi(s1,ox,oy,WHITE,1,1,0,7*8,16,8)}
+
+if (bon<2){bonx=px bony=py}
+if(bon>1){bony=bony-0.5 }
+if (bon<20){
+pixi(s1,bonx,bony,WHITE,1,1,5,7*8,16,8)}
+}
+if (game_state==2&&hp2>0){
+	if (unb2<2){ox2=px2 oy2=py2}
+if(unb2>1){oy2=oy2+0.5 }
+if (unb2<10){
+pixi(s1,ox2,oy2,WHITE,1,1,0,7*8,16,8)}
+
+if (bon2<2){bonx2=px2 bony2=py2}
+if(bon2>1){bony2=bony2-0.5 }
+if (bon2<20){
+pixi(s1,bonx2,bony2,WHITE,1,1,5,7*8,16,8)}
+	}
+if(t<40){clear() 
+print("level",-30)
+sc=""
+num2str(sc,level)
+print(sc,2)
+pixi(mp1,50)
+if(t%10>5){
+box(39,25,5,5,WHITE)}}
+//hp
+sc=""
+num2str(sc,score)
+print("SCORE:",-110,-40)
+print(sc,-120,-30)//oao
+print("HP:",-120,-60)
+for(i=0;i<hp;i+1){
+	for(j=0;j<6.2;j+0.1){
+dot(-130+i*10+cos(j)*3*sin(t/10),-50+sin(j)*3*cos(t/10),get_color(100*j,0,0))
+	}}
+	if(game_state==2){
+		sc=""
+num2str(sc,score2)
+print("SCORE:",110,-40)
+print(sc,120,-30)
+	print("HP:",120,-60)
+for(i=0;i<hp2;i+1){
+	for(j=0;j<6.2;j+0.1){
+	dot(110+i*10+cos(j)*3*sin(t/10),-50+sin(j)*3*cos(t/10),get_color(0,100*j,100*j))
+	}}
+	}
+	if(game_state==2){
+if(anpd>6&&anpd2>6){
+
+clear()
+if(anpd>10&&anpd2>10){ full_reset() 
+goto start}
+print("game over")
+sc=""
+num2str(sc,score)
+print("SCORE:",-110,-40)
+print(sc,-110,-30)
+		sc=""
+num2str(sc,score2)
+print("SCORE:",110,-40)
+print(sc,120,-30)}}
+if(game_state==1){
+if(anpd>6){
+clear()
+
+if(anpd>10){ full_reset()
+goto start}
+print("game over")
+sc=""
+num2str(sc,score)
+print("SCORE:",-110,-40)
+print(sc,-110,-30)}}
+//exit
+//ext(19,57)
+if(level==1){ext(19,2)}
+if(level==2){ext(14,6)}
+if(level==3){ext(12,3)}
+if(level==4){ext(4,8)}
+}
+while(cust==1){
+	bon+1
+	bon2+1
+	custscene=custscene+1
+	frame(1)
+	gm=0
+	while(gm<100&&custscene<2){
+		frame(1)
+		fbox(-200,-100,400,gm*2,BLACK)
+		gm+1
+		while(get_event()){if(EVT[ EVT_TYPE ]==EVT_QUIT){halt}}
+     }
+	if(custscene>0&&custscene<100){
+	    clear()
+	if(hp>0){
+		pixi(s1,-50+custscene,0,WHITE,1,1,(custscene/10)%4*8,0,8,8)}
+    else{pixi(s1,-10,0,WHITE,1,1,7*8,0,8,8)}
+		if (game_state==2){
+			if(hp2>0){
+		pixi(s22,-62+custscene,0,WHITE,1,1,(custscene/10)%4*8,0,8,8)
+}else{ pixi(s22,-22,0,WHITE,1,1,7*8,0,8,8)}
+}
+		pixi(s1,0,0,WHITE,1,1,2*8,2*8,8,8)
+		if(custscene>50){pixi(s1,0,0,WHITE,1,1,3*8,2*8,8,8)
+		if(hp>0){
+if (bon<2){bonx=0 bony=0}
+if(bon>1){bony=bony-0.5 }
+if (bon<20){
+pixi(s1,bonx,bony,WHITE,1,1,5,7*8,16,8)}
+}}
+if (game_state==2&&hp2>0){
+if (bon2<2){bonx2=-30 bony2=-2}
+if(bon2>1){bony2=bony2-0.5 }
+if (bon2<20){
+pixi(s1,bonx2,bony2,WHITE,1,1,5,7*8,16,8)}
+	
+}
+		if(custscene==50){bon=0 score+100 if(game_state==2){bon2=0 score2+100}}
+		print("Level cleared!",0,30,WHITE)
+		sc=""
+        num2str(sc,score)
+        print("SCORE:",-110,-40)
+        print(sc,-110,-30)
+if(game_state==2){
+		sc=""
+num2str(sc,score2)
+print("SCORE:",110,-40)
+print(sc,120,-30)}
+		}
+		if(custscene>100){cust=0 custscene=0 level=level+1 clean(s) clean(touch) goto start}
+		while(get_event()){if(EVT[ EVT_TYPE ]==EVT_QUIT){halt}}
+}

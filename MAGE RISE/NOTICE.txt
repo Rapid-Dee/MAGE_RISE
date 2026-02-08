@@ -1,0 +1,6 @@
+Copyright 2023 DoggeKey
+
+Все спрайты были нарисованы с помощью программы ibis Pain X(https://ibispaint.com).
+
+Данный продукт содержит программное обеспечение, разработанное
+Александром Золотовым (NightRadio) и Михаилом Разуваевым (Goglus) (https://warmplace.ru/soft/pixilang/index_ru.php)
